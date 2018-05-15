@@ -15,6 +15,7 @@
 #include "llvm/Option/ArgList.h"
 #include "llvm/Support/TargetParser.h"
 #include "llvm/Support/raw_ostream.h"
+#include "ToolChains/CommonArgs.h"
 
 using namespace clang::driver;
 using namespace clang::driver::tools;
@@ -197,6 +198,21 @@ static void getExtensionFeatures(const Driver &D,
     }
     Features.push_back(Args.MakeArgString("+" + Ext));
   }
+
+  // -mrelax is default, unless -mno-relax is specified.
+  bool Relax = true;
+  if (auto *A = Args.getLastArg(options::OPT_mrelax, options::OPT_mno_relax))
+    if (A->getOption().matches(options::OPT_mno_relax)) {
+      Relax = false;
+      Features.push_back("-relax");
+    }
+
+  if (Relax)
+    Features.push_back("+relax");
+
+  // Now add any that the user explicitly requested on the command line,
+  // which may override the defaults.
+  handleTargetFeaturesGroup(Args, Features, options::OPT_m_riscv_Features_Group);
 }
 
 void riscv::getRISCVTargetFeatures(const Driver &D, const ArgList &Args,

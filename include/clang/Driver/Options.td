@@ -152,6 +152,9 @@ def m_wasm_Features_Group : OptionGroup<"<wasm features group>">,
 def m_x86_Features_Group : OptionGroup<"<x86 features group>">,
                            Group<m_Group>, Flags<[CoreOption]>, DocName<"X86">;
 
+def m_riscv_Features_Group : OptionGroup<"<riscv features group>">,
+                             Group<m_Group>, DocName<"RISCV">;
+
 def m_libc_Group : OptionGroup<"<m libc group>">, Group<m_mips_Features_Group>,
                    Flags<[HelpHidden]>;
 
@@ -1933,6 +1936,11 @@ def mthread_model : Separate<["-"], "mthread-model">, Group<m_Group>, Flags<[CC1
   HelpText<"The thread model to use, e.g. posix, single (posix by default)">, Values<"posix,single">;
 def meabi : Separate<["-"], "meabi">, Group<m_Group>, Flags<[CC1Option]>,
   HelpText<"Set EABI type, e.g. 4, 5 or gnu (default depends on triple)">, Values<"default,4,5,gnu">;
+
+def mrelax : Flag<["-"], "mrelax">, Group<m_riscv_Features_Group>,
+  HelpText<"Enable linker relaxation">;
+def mno_relax : Flag<["-"], "mno-relax">, Group<m_riscv_Features_Group>,
+  HelpText<"Disable linker relaxation">;
 
 def mno_constant_cfstrings : Flag<["-"], "mno-constant-cfstrings">, Group<m_Group>;
 def mno_global_merge : Flag<["-"], "mno-global-merge">, Group<m_Group>, Flags<[CC1Option]>,
